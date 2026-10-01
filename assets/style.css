@@ -11,3 +11,4 @@ header{position:sticky;top:12px;z-index:20;max-width:1200px;margin:12px auto 0;h
 .hero h1{font-size:clamp(34px,3.6vw,48px);letter-spacing:-2px}.hero-note{font-size:9px;letter-spacing:1.5px}@media(max-width:1050px){.hero h1{font-size:38px}}@media(max-width:720px){.hero h1{font-size:34px;letter-spacing:-1.7px}.hero-note{font-size:8px;letter-spacing:1.15px}}
 /* Robotics leads; applications are supporting side projects. */
 .hero+.strip+.research-teaser{margin-top:48px;margin-bottom:0}.identity-story+.section{padding-top:54px}.identity-values h3{font-size:20px}.section-heading h2{font-size:28px}@media(max-width:720px){.hero+.strip+.research-teaser{margin-top:28px}.section-heading h2{font-size:24px}}
+/* Broader robotics direction retains the authored visual identity. */

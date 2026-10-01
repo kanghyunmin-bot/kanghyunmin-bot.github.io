@@ -26,7 +26,7 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
         reveal:'none', tilt:false, magnify:1.012, zIndex:20,
         interaction:reducedMotion.matches?'none':'fluid',
         interactionStrength:0.13, interactionRadius:0.3, interactionViscosity:0.65,
-        tint:'rgba(218,235,255,0.16)',
+        tint:document.body.classList.contains('immersive')?'rgba(35,74,119,0.22)':'rgba(218,235,255,0.16)',
         on:{init(){document.documentElement.dataset.glassReady='true';}}
       });
     } catch (error) {

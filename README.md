@@ -50,3 +50,19 @@ GitHub Pages 설정에서 `main` 브랜치의 `/ (root)`를 선택합니다.
 ## 정체성
 
 로봇이 중심이고 앱은 부가 프로젝트입니다. 이름의 이니셜 대신 탐색·연결·실험의 세 점 심볼을 사용합니다. 자세한 내용은 [IDENTITY.md](IDENTITY.md)를 확인하세요.
+
+## 인터랙티브 지상 로봇 홈
+
+Three.js로 직접 만든 바퀴·팔·카메라·라이다 콘셉트가 화면에 표시됩니다. GSAP ScrollTrigger가 스크롤에 따라 구조와 시점을 전환하고, 인식·제어·학습 선택에 따라 시야·연결망을 바꿉니다. 연구 선택은 설명과 실제 공개 저장소 링크를 갱신하며, 부가 앱은 별도 3D 패널로 표시합니다. Lenis는 데스크톱의 부드러운 스크롤에 사용합니다.
+
+- `templates/home.html`: 홈의 의미 있는 HTML, 링크와 콘텐츠
+- `assets/robot-world.js`: 절차적 지상 로봇과 Three.js 장면
+- `assets/immersive.css`: 몰입형 홈 스타일
+- `assets/vendor/libraries.json`: 고정 버전과 npm 원본 tarball의 검증된 integrity
+- `INTERACTIVE_RESOURCES.md`: 예제·소스 모음 링크
+
+Three.js·Lenis는 MIT입니다. **GSAP은 자체 Standard No Charge License**이며 고지와 원본 라이선스를 `assets/vendor/gsap-LICENSE.txt`에 보존합니다. 이 사이트는 애니메이션 편집기나 시각적 빌더가 아닌 포트폴리오입니다. 라이브러리를 CDN에서 실행하지 않고 해당 저장소에서 직접 제공합니다.
+
+움직임 감소 설정에서는 자동 움직임과 부드러운 스크롤을 끄며, 움직임 버튼으로 자동 애니메이션을 중지할 수 있습니다. 탭이 숨겨지면 렌더링을 쉬고 모바일 픽셀 비율을 제한합니다. WebGL 불가 환경에서는 자체 SVG 포스터와 HTML 콘텐츠를 제공합니다. 특정 브라우저·실기기의 프레임률은 별도 검증이 필요합니다.
+
+홈은 지상 로봇으로 표현하며 로봇과 VLA의 지상·수중·공중 확장을 지향합니다. 공개 연구의 실제 범위와 계획을 별도로 표시합니다. 3D 애니메이션은 실제 물리 시뮬레이션이나 정책 추론 결과가 아닙니다.
