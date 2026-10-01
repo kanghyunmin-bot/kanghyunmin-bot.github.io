@@ -1,8 +1,8 @@
 # HYUNMIN LAB
 
-강현민의 앱과 로봇 연구를 모은 무료 GitHub Pages 사이트.
+강현민의 로봇 연구를 중심으로, 필요에 따라 만든 앱을 부가 프로젝트로 소개하는 무료 GitHub Pages 사이트.
 
-- `index.html`: 홈
+- `index.html`: 로봇 중심 소개·탐색/연결/실험 정체성·부가 프로젝트
 - `apps.html`: TopDF, MtoG, WinCtrlZoom 소개·다운로드·설치 안내
 - `robotics.html`: 수중 ROV 시뮬레이터, VLA 학습, 시각 프런트엔드 소개
 - `scripts/build.py`: 콘텐츠와 정적 HTML 생성. 수정 후 Python 3으로 실행
@@ -46,3 +46,7 @@ GitHub Pages 설정에서 `main` 브랜치의 `/ (root)`를 선택합니다.
 - 원본 소스는 MIT; upstream 데모 이미지·폰트·음악은 제외
 - 페이지의 ‘유리 효과’ 버튼으로 GPU 효과를 켜거나 끌 수 있습니다.
 - 투명도 감소 설정은 효과 기본 꺼짐, 모션 감소 설정은 반사광 애니메이션과 유체 반응을 끕니다.
+
+## 정체성
+
+로봇이 중심이고 앱은 부가 프로젝트입니다. 이름의 이니셜 대신 탐색·연결·실험의 세 점 심볼을 사용합니다. 자세한 내용은 [IDENTITY.md](IDENTITY.md)를 확인하세요.
