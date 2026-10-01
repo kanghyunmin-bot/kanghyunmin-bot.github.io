@@ -1,0 +1,74 @@
+{
+  "updated": "2026-10-02",
+  "apps": [
+    {
+      "id": "topdf",
+      "name": "TopDF",
+      "icon": "topdf.png",
+      "category": "DOCUMENTS",
+      "platform": "macOS · Windows · Android",
+      "version": "1.0.0-rc.2 · 사전 릴리스",
+      "headline": "파일을 PDF로.<br>내 기기 안에서.",
+      "description": "Word, Excel, PowerPoint, HWP/HWPX 문서를 오프라인에서 PDF로 변환하세요. 페이지 범위와 용지 방향을 고르고, 원하는 위치에 저장합니다.",
+      "repo": "topdf",
+      "tag": "v1.0.0-rc.2",
+      "features": [
+        "외부 변환 API와 계정 없이 사용",
+        "Mac·Windows 우클릭 메뉴와 Android 공유 메뉴",
+        "페이지 선택, 미리보기, PDF 저장과 인쇄"
+      ],
+      "steps": [
+        "운영체제에 맞는 릴리스 파일을 다운로드합니다.",
+        "Mac·Windows 앱을 실행해 우클릭 메뉴를 등록하거나 Android 공유 메뉴에서 엽니다.",
+        "페이지와 방향을 고른 뒤 PDF를 저장합니다."
+      ],
+      "notice": "사전 릴리스입니다. Mac 서명·공증과 Windows 배포자 서명, 독립 실기기 설치·인쇄 검증은 남아 있습니다. 복잡한 서식과 글꼴은 원본과 차이가 날 수 있습니다."
+    },
+    {
+      "id": "mtog",
+      "name": "MtoG",
+      "icon": "mtog.png",
+      "category": "CONNECTED DEVICES",
+      "platform": "macOS 14+ · Android 12+",
+      "version": "0.2.0 · 시험 릴리스",
+      "headline": "Galaxy Tab을<br>Mac의 두 번째 화면으로.",
+      "description": "USB로 연결한 Galaxy Tab을 터치 가능한 확장 화면으로 활용하고, 텍스트·사진·파일을 Mac과 양방향으로 공유합니다.",
+      "repo": "MactoGalaxy",
+      "tag": "v0.2.0",
+      "features": [
+        "Apple Silicon·Intel 유니버설 Mac 앱",
+        "태블릿 터치로 Mac 앱 조작",
+        "텍스트 동기화와 사진·파일 공유"
+      ],
+      "steps": [
+        "Mac DMG와 Android APK를 설치하고 Mac에 ADB를 준비합니다.",
+        "USB 디버깅을 허용하고 페어링 코드를 등록합니다.",
+        "화면 기록·손쉬운 사용 권한을 허용한 뒤 확장 화면을 시작합니다."
+      ],
+      "notice": "시험 릴리스이며 Mac 공증 전입니다. 가상 디스플레이는 macOS 비공개 API를 사용합니다. 실제 프레임률은 기기와 부하에 따라 달라집니다."
+    },
+    {
+      "id": "zoom",
+      "name": "WinCtrlZoom",
+      "icon": "zoom.png",
+      "category": "DESKTOP TOOLS",
+      "platform": "Windows 10 · 11",
+      "version": "0.2.0",
+      "headline": "보고 싶은 곳을<br>부드럽게 확대.",
+      "description": "Win + Ctrl을 누르고 마우스 휠을 돌리세요. 마우스 위치를 중심으로 화면을 확대하고, 가장자리에서 마우스를 움직여 화면을 이동합니다.",
+      "repo": "WinCtrlZoom",
+      "tag": "v0.2.0",
+      "features": [
+        "100%부터 400%까지 부드러운 확대",
+        "트레이에서 감도와 자동 실행 설정",
+        "관리자 권한과 네트워크 연결 없이 사용"
+      ],
+      "steps": [
+        "설치판 EXE 또는 포터블 ZIP을 다운로드합니다.",
+        "앱을 실행하고 Win + Ctrl + 마우스 휠로 확대합니다.",
+        "Win + Ctrl + 0으로 원래 크기로 돌아갑니다."
+      ],
+      "notice": "코드서명 전 버전이므로 SmartScreen 경고가 표시될 수 있습니다. 디스플레이별 서로 다른 확대율과 터치·펜 좌표 보정은 지원하지 않습니다. Ubuntu GNOME 포트는 실험 단계입니다."
+    }
+  ]
+}

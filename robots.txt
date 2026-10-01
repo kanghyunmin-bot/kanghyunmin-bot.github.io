@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kanghyunmin-bot.github.io/sitemap.xml
