@@ -1,7 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 
-// An original procedural ground robot. It is a visual concept, not a digital
-// twin, a physics simulation or a claim about a deployed VLA system.
+// Public Spot mesh model plus an original mobile-manipulator concept.
+// Motion is an artistic joint animation, not a deployed robot policy.
 const root = document.getElementById('robot-world');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const mobile = matchMedia('(max-width: 720px)');
@@ -92,6 +92,47 @@ try {
   for(const x of [-.15,.15]){mesh(box(.06,.28,.13,.025),chrome,wrist,[x,.27,0]);mesh(box(.11,.055,.13,.015),rubber,wrist,[x*.78,.405,0]);}
   const cableCurve=new THREE.CatmullRomCurve3([new THREE.Vector3(-.28,.91,-.25),new THREE.Vector3(-.45,1.5,-.25),new THREE.Vector3(-.4,2,-.15),new THREE.Vector3(-.9,1.92,-.12)]);
   mesh(new THREE.TubeGeometry(cableCurve,32,.023,6,false),black,robot);
+  // Three intact ground-robot forms. Transition is a whole-object crossfade;
+  // no components are detached or exploded during scrolling.
+  const quadruped=new THREE.Group();rig.add(quadruped);
+  // Pinned BSD-3-Clause Menagerie meshes; preserve MJCF joint/body hierarchy.
+  const modelURL=new URL('./models/spot/model.json',import.meta.url);
+  const [metadata,geometry]=await Promise.all([
+    fetch(modelURL).then(r=>{if(!r.ok)throw new Error('Spot metadata unavailable');return r.json();}),
+    fetch(new URL('./models/spot/geometry.bin',import.meta.url)).then(r=>{if(!r.ok)throw new Error('Spot geometry unavailable');return r.arrayBuffer();})
+  ]);
+  const spotMaterials={BlackAbs:new THREE.MeshStandardMaterial({color:0x17191c,roughness:.48,metalness:.18}),wrap:new THREE.MeshPhysicalMaterial({color:0xe8b530,roughness:.34,metalness:.25,clearcoat:.5})};
+  const spotGeometry={};
+  for(const [name,m] of Object.entries(metadata.meshes)){
+    const g=new THREE.BufferGeometry();const buffer=new THREE.InterleavedBuffer(new Float32Array(geometry,m.offset,m.vertices*6),6);
+    g.setAttribute('position',new THREE.InterleavedBufferAttribute(buffer,3,0));g.setAttribute('normal',new THREE.InterleavedBufferAttribute(buffer,3,3));g.setIndex(new THREE.BufferAttribute(new Uint32Array(geometry,m.indexOffset,m.indices),1));g.computeBoundingSphere();spotGeometry[name]=g;
+  }
+  const spotJoints={};
+  function spotBody(data,parent){
+    const group=new THREE.Group();group.name=data.name;group.position.set(...data.position);parent.add(group);
+    if(data.joint){spotJoints[data.joint.name]=group;group.userData.axis=new THREE.Vector3(...data.joint.axis.split(' ').map(Number));}
+    for(const m of data.meshes)mesh(spotGeometry[m.mesh],spotMaterials[m.material],group);
+    for(const child of data.children)spotBody(child,group);
+    return group;
+  }
+  const spotCoordinates=new THREE.Group();spotCoordinates.rotation.x=-Math.PI/2;spotCoordinates.rotation.z=Math.PI/2;spotCoordinates.scale.setScalar(3.8);quadruped.add(spotCoordinates);
+  const spotBase=spotBody(metadata.body,spotCoordinates);spotBase.position.z=.46;
+  for(const prefix of ['fl','fr','hl','hr']){
+    spotJoints[prefix+'_hy'].rotation.y=1.04;spotJoints[prefix+'_kn'].rotation.y=-1.8;
+    const foot=mesh(new THREE.SphereGeometry(.036,12,8),spotMaterials.BlackAbs,spotJoints[prefix+'_kn'],[0,0,-.3365]);
+  }
+  quadruped.position.y=-.45;
+  document.documentElement.dataset.spotModel='ready';
+  const forms={wheel:robot,quad:quadruped};
+  const formMix={wheel:0,quad:1};let currentForm='quad';
+  Object.values(forms).forEach(group=>{const materials=new Map();group.traverse(obj=>{if(!obj.material)return;const clone=m=>{if(!materials.has(m)){const c=m.clone();c.userData.originalOpacity=m.opacity;materials.set(m,c);}return materials.get(m);};obj.material=Array.isArray(obj.material)?obj.material.map(clone):clone(obj.material);});});
+  document.querySelectorAll('[data-form]').forEach(button=>button.addEventListener('click',()=>{
+    currentForm=button.dataset.form;
+    document.querySelectorAll('[data-form]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    const next={wheel:0,quad:0};next[currentForm]=1;
+    if(window.gsap&&!reducedMotion.matches)gsap.to(formMix,{...next,duration:.72,ease:'power2.inOut',overwrite:true,onUpdate:()=>{dirty=true;}});
+    else {Object.assign(formMix,next);dirty=true;}
+  }));
   const floor=new THREE.Group();scene.add(floor);floor.position.y=-.48;
   const disc=new THREE.Mesh(new THREE.CircleGeometry(3.2,96),new THREE.MeshStandardMaterial({color:0x123555,metalness:.75,roughness:.28,transparent:true,opacity:.55}));disc.rotation.x=-Math.PI/2;floor.add(disc);
   const grid=new THREE.PolarGridHelper(3.4,20,7,128,0x2b608a,0x224667);grid.material.transparent=true;grid.material.opacity=.28;floor.add(grid);
@@ -119,14 +160,14 @@ try {
   });
   let dirty=true,visible=!document.hidden,sceneTime=0,last=performance.now(),progress=0,mode='vision',selection=0;
   const pointer={x:0,y:0};const smooth={x:0,y:0};
-  const state={rotation:-.5,explode:0,x:0,scale:1,orbit:0,robotOpacity:1};
+  const state={rotation:-.5,x:0,scale:1,orbit:0,robotOpacity:1};
   const sections=[...document.querySelectorAll('[data-chapter]')];
   if(window.gsap&&window.ScrollTrigger){
     gsap.registerPlugin(ScrollTrigger);
     const timeline=gsap.timeline({scrollTrigger:{trigger:document.querySelector('main'),start:'top top',end:'bottom bottom',scrub:reducedMotion.matches?true:1,onUpdate:s=>{progress=s.progress;dirty=true;}}});
-    timeline.to(state,{rotation:1.15,explode:1,x:0,scale:1,duration:1},0)
-      .to(state,{rotation:2.8,explode:.15,scale:.86,duration:1},1)
-      .to(state,{rotation:3.6,explode:0,scale:.62,orbit:1,duration:1},2);
+    timeline.to(state,{rotation:.4,x:0,scale:1,duration:1},0)
+      .to(state,{rotation:1.35,scale:.86,duration:1},1)
+      .to(state,{rotation:2.4,scale:.62,orbit:1,duration:1},2);
     sections.forEach((section,i)=>ScrollTrigger.create({trigger:section,start:'top 52%',end:'bottom 52%',onToggle:s=>{if(s.isActive){document.querySelectorAll('.chapter-nav a').forEach((a,j)=>{if(j===i)a.setAttribute('aria-current','step');else a.removeAttribute('aria-current');});document.body.dataset.chapter=String(i);dirty=true;}}}));
   }
   let lenis;
@@ -158,11 +199,28 @@ try {
     robot.rotation.y=state.rotation+(running?smooth.x*.16:0);robot.rotation.x=running?smooth.y*.035:0;
     rig.position.y=running?Math.sin(sceneTime*.7)*.035:0;
     rig.scale.setScalar(state.scale*(isMobile?.85:1));
-    wheelAssemblies.forEach(o=>o.group.position.copy(o.base).addScaledVector(o.direction,state.explode));
-    sensorHead.position.z=1.38+state.explode*.6;lidar.position.y=.93+state.explode*.48;
-    armBase.position.y=.88+state.explode*.38;
-    if(running){wheelRotors.forEach(w=>w.rotation.x=sceneTime*(mode==='control'?.65:.055));shoulder.rotation.z=-.4+Math.sin(sceneTime*.7)*.07;elbow.rotation.z=1.15+Math.sin(sceneTime*.6)*.1;lidar.rotation.y=sceneTime*.9;learningNodes.rotation.y=sceneTime*.15;particles.rotation.y=sceneTime*.006;}
-    const active=Number(document.body.dataset.chapter||0);rayGroup.visible=mode==='vision'&&active>0&&active<3;learningNodes.visible=mode==='learning'&&active>0&&active<3;
+    const active=Number(document.body.dataset.chapter||0);
+    Object.entries(forms).forEach(([name,group])=>{
+      const amount=formMix[name];group.visible=amount>.005;
+      const alpha=Math.min(1,amount);
+      group.traverse(obj=>{if(!obj.material)return;const mats=Array.isArray(obj.material)?obj.material:[obj.material];mats.forEach(m=>{const original=m.userData.originalOpacity??m.opacity;m.userData.originalOpacity=original;const isFade=alpha<.995;m.transparent=isFade||original<1;m.opacity=original*alpha;m.depthWrite=!isFade;});});
+      group.rotation.y=state.rotation+(running?smooth.x*.16+Math.sin(sceneTime*.45)*.16:0);
+      group.position.x=running?Math.sin(sceneTime*.5)*(active===1?.32:.13):0;
+      group.position.z=running?Math.cos(sceneTime*.5)*(active===1?.22:.1):0;
+    });
+    if(running){
+      const gait=sceneTime*2.3;
+      for(const [index,prefix] of ['fl','fr','hl','hr'].entries()){
+        const phase=(index===0||index===3)?0:Math.PI;const wave=Math.sin(gait+phase);
+        spotJoints[prefix+'_hy'].rotation.y=1.04+wave*.2;
+        spotJoints[prefix+'_kn'].rotation.y=-1.8-Math.max(0,wave)*.28;
+        spotJoints[prefix+'_hx'].rotation.x=Math.sin(sceneTime*.8)*.025;
+      }
+      spotBase.position.z=.46+Math.abs(Math.sin(gait))*.006;
+
+    }
+    if(running){wheelRotors.forEach(w=>w.rotation.x=sceneTime*(active===1?.7:.2));shoulder.rotation.z=-.4+Math.sin(sceneTime*.7)*.07;elbow.rotation.z=1.15+Math.sin(sceneTime*.6)*.1;lidar.rotation.y=sceneTime*.9;learningNodes.rotation.y=sceneTime*.15;particles.rotation.y=sceneTime*.006;}
+    rayGroup.visible=mode==='vision'&&currentForm==='wheel'&&active>0&&active<3;learningNodes.visible=mode==='learning'&&active>0&&active<3;
     appOrbit.visible=state.orbit>.025;
     if(appOrbit.visible){appOrbit.scale.setScalar(state.orbit);appPanels.forEach((p,i)=>{const a=(i-selection)/3*Math.PI*2+Math.PI/2;p.position.set(Math.cos(a)*2.1,.9+Math.sin(a)*.32,Math.sin(a)*1.9);p.lookAt(camera.position);p.scale.setScalar(i===selection?1.13:.85);});}
     document.querySelector('.scene-progress div').style.transform=`scaleX(${progress})`;
@@ -184,4 +242,5 @@ try {
     const v=data[b.dataset.project];document.getElementById('project-description').textContent=v[0];document.getElementById('project-link').href=v[1];
   }));
   document.querySelectorAll('.preview-app').forEach(b=>{b.disabled=true;b.textContent='3D 미리보기 사용 불가';});
+  document.querySelectorAll('[data-form]').forEach(b=>{b.disabled=true;b.setAttribute('aria-label',b.textContent+' — 3D 사용 불가');});
 }

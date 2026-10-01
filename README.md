@@ -53,7 +53,7 @@ GitHub Pages 설정에서 `main` 브랜치의 `/ (root)`를 선택합니다.
 
 ## 인터랙티브 지상 로봇 홈
 
-Three.js로 직접 만든 바퀴·팔·카메라·라이다 콘셉트가 화면에 표시됩니다. GSAP ScrollTrigger가 스크롤에 따라 구조와 시점을 전환하고, 인식·제어·학습 선택에 따라 시야·연결망을 바꿉니다. 연구 선택은 설명과 실제 공개 저장소 링크를 갱신하며, 부가 앱은 별도 3D 패널로 표시합니다. Lenis는 데스크톱의 부드러운 스크롤에 사용합니다.
+Three.js로 직접 만든 바퀴형·사족보행·휴머노이드 콘셉트가 화면에 표시됩니다. 로봇을 분해하지 않고 온전한 모델의 이동·관절 동작을 표현하며, 형태 선택 시 전체 모델을 부드럽게 교차 전환합니다. GSAP ScrollTrigger가 스크롤에 따라 로봇의 방향과 장면을 전환하고, 인식·제어·학습 선택에 따라 시야·연결망을 바꿉니다. 연구 선택은 설명과 실제 공개 저장소 링크를 갱신하며, 부가 앱은 별도 3D 패널로 표시합니다. Lenis는 데스크톱의 부드러운 스크롤에 사용합니다.
 
 - `templates/home.html`: 홈의 의미 있는 HTML, 링크와 콘텐츠
 - `assets/robot-world.js`: 절차적 지상 로봇과 Three.js 장면
@@ -66,3 +66,7 @@ Three.js·Lenis는 MIT입니다. **GSAP은 자체 Standard No Charge License**�
 움직임 감소 설정에서는 자동 움직임과 부드러운 스크롤을 끄며, 움직임 버튼으로 자동 애니메이션을 중지할 수 있습니다. 탭이 숨겨지면 렌더링을 쉬고 모바일 픽셀 비율을 제한합니다. WebGL 불가 환경에서는 자체 SVG 포스터와 HTML 콘텐츠를 제공합니다. 특정 브라우저·실기기의 프레임률은 별도 검증이 필요합니다.
 
 홈은 지상 로봇으로 표현하며 로봇과 VLA의 지상·수중·공중 확장을 지향합니다. 공개 연구의 실제 범위와 계획을 별도로 표시합니다. 3D 애니메이션은 실제 물리 시뮬레이션이나 정책 추론 결과가 아닙니다.
+
+### Spot model
+
+The default robot uses the Boston Dynamics Spot description from Google DeepMind MuJoCo Menagerie, pinned to `4d038b3feae26ec82b46a4d586379114012a8ac7`. Original mesh geometry and joint hierarchy are retained; OBJ data is packed into indexed binary buffers for the web. Model copyright: Clearpath Robotics Inc.; BSD-3-Clause license in `assets/models/spot/LICENSE`. Displayed motion is artistic joint animation, not physical simulation, VLA inference, robot ownership, or manufacturer endorsement. The alternative wheeled robot is an original concept.
